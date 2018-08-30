@@ -3,6 +3,7 @@ require_relative 'boot'
 require 'rails/all'
 
 Bundler.require(*Rails.groups)
+require "webpacker"
 require "webpacker/routes"
 
 module Dummy
@@ -16,4 +17,3 @@ module Dummy
     # the framework and any gems in your application.
   end
 end
-
