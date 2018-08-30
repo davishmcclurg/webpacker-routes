@@ -1,6 +1,6 @@
 module Webpacker
   module Routes
-    class Railtie < ::Rails::Railtie
+    class Engine < ::Rails::Engine
     end
   end
 end

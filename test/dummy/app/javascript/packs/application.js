@@ -7,4 +7,12 @@
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
 
-console.log('Hello World from Webpacker')
+import { rails_blob_representation } from 'routes'
+
+console.log(
+  rails_blob_representation({
+    signed_blob_id: 'a',
+    variation_key: 'b',
+    filename: 'c'
+  })
+)
