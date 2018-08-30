@@ -9,9 +9,8 @@ Gem::Specification.new do |s|
   s.version     = Webpacker::Routes::VERSION
   s.authors     = ["David Harsha"]
   s.email       = ["davishmcclurg@gmail.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Webpacker::Routes."
-  s.description = "TODO: Description of Webpacker::Routes."
+  s.homepage    = "https://github.com/davishmcclurg/webpacker-routes"
+  s.summary     = "Convert Rails routes to JavaScript modules"
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
