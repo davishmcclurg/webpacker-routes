@@ -12,8 +12,8 @@ module Webpacker
 
     def self.generate(route_set)
       File.atomic_write(Webpacker.config.routes_path.join('index.js')) do |file|
-        file.write(<<-JAVASCRIPT.lstrip)
-          import { urlFor } from './utils'
+        file.write(<<-JAVASCRIPT.strip_heredoc)
+          import { urlFor, onlyPath } from './utils'
         JAVASCRIPT
 
         route_set.named_routes.sort_by(&:first).each do |name, route|
@@ -23,8 +23,10 @@ module Webpacker
           segment_keys = route.segment_keys.uniq.to_json
           defaults = route.defaults.except(:controller, :action).to_json
 
-          file.write(<<-JAVASCRIPT.lstrip)
-            export const #{name} = (...args) => urlFor(#{spec}, #{segment_keys}, #{defaults}, ...args)
+          file.write(<<-JAVASCRIPT.strip_heredoc)
+            const #{name} = [#{spec}, #{segment_keys}, #{defaults}]
+            export const #{name}_url = (...args) => urlFor(#{name}, ...args)
+            export const #{name}_path = (...args) => urlFor(onlyPath(#{name}), ...args)
           JAVASCRIPT
         end
       end
