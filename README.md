@@ -5,10 +5,18 @@ Short description and motivation.
 
 - fix handle_positional_args in rails
 - somehow generate routes automatically in development
+  - to_prepare?
 - unicode route names
 - default_url_options
 - relative_url_root
 - camelcase option
+
+```
+gem 'webpacker-routes'
+bundle install
+bundle exec rails webpacker:install:routes
+bundle exec rails webpacker:routes:generate
+```
 
 ## Usage
 How to use my plugin.
