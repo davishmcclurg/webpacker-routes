@@ -58,7 +58,7 @@ const generate = (spec, options) => {
   return path
 }
 
-const pathFor = (options) => {
+const generatePath = (options) => {
   const { script_name, path, trailing_slash, params, anchor } = options
   let out = ''
   if (script_name) {
@@ -86,7 +86,7 @@ const pathFor = (options) => {
   return out
 }
 
-const fullUrlFor = (options) => {
+const generateUrl = (options) => {
   let { host, port, protocol } = options
   const { user, password } = options
   if (!host) {
@@ -116,7 +116,7 @@ const fullUrlFor = (options) => {
   if (port) {
     out += `:${port}`
   }
-  out += pathFor(options)
+  out += generatePath(options)
   return out
 }
 
@@ -158,11 +158,7 @@ export const urlFor = ([spec, segmentKeys, defaults], ...args) => {
     path: generate(spec, nonReservedOptions)
   })
 
-  return options.only_path ? pathFor(options) : fullUrlFor(options)
+  return options.only_path ? generatePath(options) : generateUrl(options)
 }
 
-export const onlyPath = ([spec, segmentKeys, defaults]) => [
-  spec,
-  segmentKeys,
-  { only_path: true, ...defaults }
-]
+export const pathFor = ([spec, segmentKeys, defaults], ...args) => urlFor([spec, segmentKeys, { only_path: true, ...defaults }], ...args)
