@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
   s.add_dependency "webpacker", "~> 3.5"
 
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency "execjs"
 end
