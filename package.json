@@ -1,6 +1,6 @@
 {
   "name": "webpacker-routes",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Convert Rails routes to JavaScript modules",
   "main": "package/src.js",
   "files": [
