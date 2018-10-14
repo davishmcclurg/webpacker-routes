@@ -7,6 +7,7 @@ class Webpacker::Routes::Test < ActiveSupport::TestCase
   delegate :root_path, :source_entry_path, :routes_path, :public_path, :to => :'Webpacker.config'
 
   def compile(javascript, routes: Rails.application.routes, pack: 'test.js')
+    Webpacker.logger = Logger.new($stdout).tap { |l| l.level = 0 }
     [source_entry_path, routes_path].each do |dir|
       dir.rmtree if dir.exist?
       dir.mkdir
