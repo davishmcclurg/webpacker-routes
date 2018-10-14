@@ -2,8 +2,9 @@ sudo: false
 language: ruby
 rvm:
   - 2.5
+  - 2.4
   - 2.3
   - 2.2
 before_install:
   - gem install bundler -v 1.16.4
-  - nvm install node
+  - yarn install
