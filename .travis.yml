@@ -8,3 +8,4 @@ rvm:
 before_install:
   - gem install bundler -v 1.16.4
   - yarn install
+  - cd test/dummy && yarn install && cd -
