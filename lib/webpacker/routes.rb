@@ -25,9 +25,9 @@ module Webpacker
           defaults = route.defaults.except(:controller, :action).to_json
 
           file.write(<<-JAVASCRIPT.strip_heredoc)
-            const #{name} = [#{spec}, #{segment_keys}, #{defaults}]
-            export const #{name}_url = (...args) => urlFor(#{name}, ...args)
-            export const #{name}_path = (...args) => pathFor(#{name}, ...args)
+            const #{name}_spec = [#{spec}, #{segment_keys}, #{defaults}]
+            export const #{name}_url = (...args) => urlFor(#{name}_spec, ...args)
+            export const #{name}_path = (...args) => pathFor(#{name}_spec, ...args)
           JAVASCRIPT
         end
       end
