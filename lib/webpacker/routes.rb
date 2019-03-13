@@ -1,3 +1,4 @@
+require "webpacker/routes/version"
 require "webpacker/routes/railtie"
 
 module Webpacker
