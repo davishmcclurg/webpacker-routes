@@ -14,13 +14,6 @@ $ bundle
 $ bundle exec rails webpacker:install:routes
 ```
 
-Finally, generate your routes file:
-```bash
-$ bundle exec rails webpacker:routes:generate
-```
-
-You will need to regenerate the routes file whenever you add a new Rails route.
-
 ## Usage
 Import individual routes from any Webpacker-compiled file:
 
@@ -28,6 +21,14 @@ Import individual routes from any Webpacker-compiled file:
 import { root_path } from 'routes'
 
 console.log(root_path())
+```
+
+The routes file is generated when Rails starts, including during `webpacker:compile` (or `assets:precompile`).
+In development, routes will be updated when a file changes and a request is processed.
+
+To generate routes manually, run:
+```bash
+$ bundle exec rails webpacker:routes:generate
 ```
 
 ## License
