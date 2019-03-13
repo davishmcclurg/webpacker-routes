@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    webpacker-routes (0.0.9)
+    webpacker-routes (0.0.10)
       rails (>= 4.2)
       webpacker (>= 3)
 
