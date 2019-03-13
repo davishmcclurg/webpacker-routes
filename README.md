@@ -35,7 +35,6 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## TODO
 
-- fix handle_positional_args in rails
 - somehow generate routes automatically in development
   - to_prepare?
 - support all valid route names
