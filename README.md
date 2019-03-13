@@ -34,11 +34,9 @@ $ bundle exec rails webpacker:routes:generate
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
-## TODO
+## Todo
 
-- somehow generate routes automatically in development
-  - to_prepare?
+- default_url_options (especially host for urls)
 - support all valid route names
-- default_url_options
 - relative_url_root
 - camelcase
