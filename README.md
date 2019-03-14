@@ -36,7 +36,6 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Todo
 
-- default_url_options (especially host for urls)
 - support all valid route names
 - relative_url_root
 - camelcase

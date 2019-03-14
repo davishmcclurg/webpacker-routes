@@ -28,6 +28,18 @@ class Webpacker::Routes::Test < ActiveSupport::TestCase
     assert_equal('/?foo=bar', context.eval('__routes__.root_path({ foo: "bar" })'))
   end
 
+  test 'respects default_url_options' do
+    Rails.application.default_url_options = { :host => 'https://example.com' }
+    output = compile(<<-JAVASCRIPT)
+      import * as routes from 'routes'
+      global.__routes__ = routes
+    JAVASCRIPT
+    context = ExecJS.compile(output)
+    assert_equal('http://example.com/', context.eval('__routes__.root_url({ host: "http://example.com" })'))
+    assert_equal('https://example.com/', context.eval('__routes__.root_url()'))
+    Rails.application.default_url_options = {}
+  end
+
   test 'compilation fails for invalid route name' do
     refute compile(<<-JAVASCRIPT)
       import { invalid_url } from 'routes'

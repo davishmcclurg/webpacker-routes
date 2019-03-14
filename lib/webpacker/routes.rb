@@ -10,26 +10,38 @@ module Webpacker
 
   module Routes
     JAVASCRIPT_VARIABLE_NAME_REGEX = /\A[_$a-z][_$a-z0-9]*\z/i
+    IGNORED_OPTIONS = %i[controller action]
 
-    def self.generate(route_set)
-      File.atomic_write(Webpacker.config.routes_path.join('index.js')) do |file|
-        file.write(<<-JAVASCRIPT.strip_heredoc)
-          import { urlFor, pathFor } from 'webpacker-routes'
-        JAVASCRIPT
-
-        route_set.named_routes.sort_by(&:first).each do |name, route|
-          raise `Invalid route name for javascript: ${name}` unless JAVASCRIPT_VARIABLE_NAME_REGEX =~ name
-
-          spec = route.path.spec.to_s.to_json
-          segment_keys = route.segment_keys.uniq.to_json
-          defaults = route.defaults.except(:controller, :action).to_json
+    class << self
+      def generate(route_set)
+        File.atomic_write(Webpacker.config.routes_path.join('index.js')) do |file|
+          default_url_options = js(route_set.default_url_options.except(*IGNORED_OPTIONS))
 
           file.write(<<-JAVASCRIPT.strip_heredoc)
-            const #{name}_spec = [#{spec}, #{segment_keys}, #{defaults}]
-            export const #{name}_url = (...args) => urlFor(#{name}_spec, ...args)
-            export const #{name}_path = (...args) => pathFor(#{name}_spec, ...args)
+            import { urlFor, pathFor } from 'webpacker-routes'
+            const default_url_options = #{default_url_options}
           JAVASCRIPT
+
+          route_set.named_routes.sort_by(&:first).each do |name, route|
+            raise `Invalid route name for javascript: ${name}` unless JAVASCRIPT_VARIABLE_NAME_REGEX =~ name
+
+            spec = js(route.path.spec.to_s)
+            segment_keys = js(route.segment_keys.uniq)
+            options = js(route.defaults.except(*IGNORED_OPTIONS))
+
+            file.write(<<-JAVASCRIPT.strip_heredoc)
+              const #{name}_spec = [#{spec}, #{segment_keys}, { ...default_url_options, ...#{options} }]
+              export const #{name}_url = (...args) => urlFor(#{name}_spec, ...args)
+              export const #{name}_path = (...args) => pathFor(#{name}_spec, ...args)
+            JAVASCRIPT
+          end
         end
+      end
+
+    private
+
+      def js(obj)
+        ERB::Util.json_escape(obj.to_json)
       end
     end
   end
