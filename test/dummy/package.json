@@ -2,10 +2,10 @@
   "name": "dummy",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "3.5",
+    "@rails/webpacker": "4.0.2",
     "webpacker-routes": "0.0.11"
   },
   "devDependencies": {
-    "webpack-dev-server": "2.11.2"
+    "webpack-dev-server": "3.2.1"
   }
 }
