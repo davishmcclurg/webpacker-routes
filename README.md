@@ -37,5 +37,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Todo
 
 - support all valid route names
-- relative_url_root
 - camelcase
