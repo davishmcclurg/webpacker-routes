@@ -6683,10 +6683,10 @@ webpack@^3.12.0:
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
 
-webpacker-routes@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/webpacker-routes/-/webpacker-routes-0.0.10.tgz#0221d3f6f521a71c1e79feb68abc088b27a5a09b"
-  integrity sha512-EwpUzw3j58hFXbax7yOyHMvf/oMmi/ZO8IMy0o3LfvVLhkr4Mz9QCjdlwck5rk7zTpQxjeAXcr792T9jJSx6kQ==
+webpacker-routes@0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/webpacker-routes/-/webpacker-routes-0.0.11.tgz#d1cf2fdabfd3d0c2eab4e3203b20cee260b6b502"
+  integrity sha512-LE3MWGMpqQeF4GjtArSbQIjHAJlYxC1iweQmpT9uiCi5WzyIKGUgqARUHRkjldzRqmqmalPeaQjrsGvg0wk3xw==
   dependencies:
     route-parser "^0.0.5"
 
