@@ -2,27 +2,28 @@ require 'test_helper'
 require 'execjs'
 
 class Webpacker::Routes::Test < ActiveSupport::TestCase
-  include ActionDispatch::Assertions::RoutingAssertions
-
   delegate :root_path, :source_entry_path, :routes_path, :public_path, :to => :'Webpacker.config'
 
-  def compile(javascript, routes: Rails.application.routes, pack: 'test.js')
+  def compile(javascript, pack: 'test.js')
     pack_file = source_entry_path.join(pack)
     pack_file.delete if pack_file.exist?
     pack_file.write(javascript)
-    Webpacker::Routes.generate(routes)
+    Webpacker::Routes.generate(Rails.application)
     return false unless Dir.chdir(root_path) { Webpacker.compile }
     public_path.join(Webpacker.manifest.lookup(pack).slice(1..-1)).read
   ensure
     pack_file.delete
   end
 
-  test 'generates url/path helpers' do
-    output = compile(<<-JAVASCRIPT)
+  def routes_execjs_context
+    ExecJS.compile(compile(<<-JAVASCRIPT))
       import * as routes from 'routes'
       global.__routes__ = routes
     JAVASCRIPT
-    context = ExecJS.compile(output)
+  end
+
+  test 'generates url/path helpers' do
+    context = routes_execjs_context
     assert_equal('/', context.eval('__routes__.root_path()'))
     assert_equal('http://example.com/', context.eval('__routes__.root_url({ host: "http://example.com" })'))
     assert_equal('/?foo=bar', context.eval('__routes__.root_path({ foo: "bar" })'))
@@ -30,13 +31,14 @@ class Webpacker::Routes::Test < ActiveSupport::TestCase
 
   test 'respects default_url_options' do
     Rails.application.default_url_options = { :host => 'https://example.com' }
-    output = compile(<<-JAVASCRIPT)
-      import * as routes from 'routes'
-      global.__routes__ = routes
-    JAVASCRIPT
-    context = ExecJS.compile(output)
+    context = routes_execjs_context
     assert_equal('http://example.com/', context.eval('__routes__.root_url({ host: "http://example.com" })'))
     assert_equal('https://example.com/', context.eval('__routes__.root_url()'))
+    Rails.application.config.webpacker.routes.default_url_options = { :host => 'http://example.net' }
+    context = routes_execjs_context
+    assert_equal('https://example.net/', context.eval('__routes__.root_url({ host: "https://example.net" })'))
+    assert_equal('http://example.net/', context.eval('__routes__.root_url()'))
+    Rails.application.config.webpacker.routes.default_url_options = {}
     Rails.application.default_url_options = {}
   end
 
@@ -48,18 +50,17 @@ class Webpacker::Routes::Test < ActiveSupport::TestCase
   end
 
   test 'tree-shakes unused routes' do
-    with_routing do |set|
-      set.draw do
-        root 'application#index'
-        get '/used/for/something', as: :used
-        get '/tree/shook', as: :tree_shook
-      end
-      output = compile(<<-JAVASCRIPT, routes: set)
-        import { used_path } from 'routes'
-        used_path()
-      JAVASCRIPT
-      assert_match(/\/used\/for\/something/, output)
-      assert_no_match(/\/tree\/shook/, output)
+    Rails.application.routes.draw do
+      root 'application#index'
+      get '/used/for/something', as: :used
+      get '/tree/shook', as: :tree_shook
     end
+    output = compile(<<-JAVASCRIPT)
+      import { used_path } from 'routes'
+      used_path()
+    JAVASCRIPT
+    assert_match(/\/used\/for\/something/, output)
+    assert_no_match(/\/tree\/shook/, output)
+    Rails.application.reload_routes!
   end
 end

@@ -4,7 +4,7 @@ require "webpacker/routes/railtie"
 module Webpacker
   class Configuration
     def routes_path
-      source_path.join('routes')
+      fetch(:routes_path) || source_path.join('routes')
     end
   end
 
@@ -13,16 +13,16 @@ module Webpacker
     IGNORED_OPTIONS = %i[controller action]
 
     class << self
-      def generate(route_set)
+      def generate(app)
         File.atomic_write(Webpacker.config.routes_path.join('index.js')) do |file|
-          default_url_options = js(route_set.default_url_options.except(*IGNORED_OPTIONS))
+          default_url_options = js(app.default_url_options.merge(app.config.webpacker.routes.default_url_options).except(*IGNORED_OPTIONS))
 
           file.write(<<-JAVASCRIPT.strip_heredoc)
             import { urlFor, pathFor } from 'webpacker-routes'
             const default_url_options = #{default_url_options}
           JAVASCRIPT
 
-          route_set.named_routes.sort_by(&:first).each do |name, route|
+          app.routes.named_routes.sort_by(&:first).each do |name, route|
             raise `Invalid route name for javascript: ${name}` unless JAVASCRIPT_VARIABLE_NAME_REGEX =~ name
 
             spec = js(route.path.spec.to_s)

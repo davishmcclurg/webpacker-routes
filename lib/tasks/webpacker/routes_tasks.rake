@@ -25,7 +25,7 @@ namespace :webpacker do
 
     desc "Generate routes package"
     task generate: [:verify_install, :environment] do
-      Webpacker::Routes.generate(Rails.application.routes)
+      Webpacker::Routes.generate(Rails.application)
     end
   end
 end

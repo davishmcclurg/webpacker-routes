@@ -1,8 +1,13 @@
+require 'webpacker/railtie'
+
 module Webpacker
   module Routes
     class Engine < ::Rails::Engine
+      config.webpacker.routes = ActiveSupport::OrderedOptions.new
+      config.webpacker.routes.default_url_options = {}
+
       config.after_initialize do |app|
-        generate = -> { Webpacker::Routes.generate(app.tap(&:reload_routes!).routes) }
+        generate = -> { Webpacker::Routes.generate(app.tap(&:reload_routes!)) }
         if Rails::VERSION::MAJOR >= 5
           app.reloader.to_run(&generate)
         else

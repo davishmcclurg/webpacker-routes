@@ -31,6 +31,10 @@ To generate routes manually, run:
 $ bundle exec rails webpacker:routes:generate
 ```
 
+### Options
+
+- `config.webpacker.routes.default_url_options` - defaults used for generating urls. These are merged with `Rails.application.default_url_options`.
+
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
