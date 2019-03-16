@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "4.0.2",
-    "webpacker-routes": "0.0.11"
+    "webpacker-routes": "0.1.0"
   },
   "devDependencies": {
     "webpack-dev-server": "3.2.1"
