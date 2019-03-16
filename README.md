@@ -33,12 +33,8 @@ $ bundle exec rails webpacker:routes:generate
 
 ### Options
 
-- `config.webpacker.routes.default_url_options` - defaults used for generating urls. These are merged with `Rails.application.default_url_options`.
+- `config.webpacker.routes.default_url_options` - defaults used for generating urls. These are merged with `Rails.application.default_url_options`. Default: `{}`
+- `config.webpacker.routes.camel_case` - convert route names to camel case. Default: `false`
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Todo
-
-- support all valid route names
-- camelcase

@@ -42,6 +42,15 @@ class Webpacker::Routes::Test < ActiveSupport::TestCase
     Rails.application.default_url_options = {}
   end
 
+  test 'camel_case' do
+    Rails.application.config.webpacker.routes.camel_case = true
+    context = routes_execjs_context
+    assert_equal('/', context.eval('__routes__.rootPath()'))
+    assert_equal('http://example.com/', context.eval('__routes__.rootUrl({ host: "http://example.com" })'))
+    assert_equal('/?foo=bar', context.eval('__routes__.rootPath({ foo: "bar" })'))
+    Rails.application.config.webpacker.routes.camel_case = false
+  end
+
   test 'compilation fails for invalid route name' do
     refute compile(<<-JAVASCRIPT)
       import { invalid_url } from 'routes'
@@ -51,7 +60,6 @@ class Webpacker::Routes::Test < ActiveSupport::TestCase
 
   test 'tree-shakes unused routes' do
     Rails.application.routes.draw do
-      root 'application#index'
       get '/used/for/something', as: :used
       get '/tree/shook', as: :tree_shook
     end

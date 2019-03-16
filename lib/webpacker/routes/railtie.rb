@@ -5,6 +5,7 @@ module Webpacker
     class Engine < ::Rails::Engine
       config.webpacker.routes = ActiveSupport::OrderedOptions.new
       config.webpacker.routes.default_url_options = {}
+      config.webpacker.routes.camel_case = false
 
       config.after_initialize do |app|
         generate = -> { Webpacker::Routes.generate(app.tap(&:reload_routes!)) }
