@@ -1,8 +1,5 @@
 import Route from 'route-parser'
 
-// fixme
-const defaultUrlOptions = {}
-
 const reservedOptions = [
   'anchor',
   'domain',
@@ -122,8 +119,6 @@ const generateUrl = (options) => {
 
 export const urlFor = ([spec, segmentKeys, defaults], ...args) => {
   const lastArgOptions = (args[args.length - 1] && typeof args[args.length - 1] === 'object') ? args.pop() : {}
-  const positionedOptions = handlePositionalArgs(segmentKeys, defaults, args, lastArgOptions)
-
   const {
     user,
     password,
@@ -131,7 +126,7 @@ export const urlFor = ([spec, segmentKeys, defaults], ...args) => {
     relative_url_root,
     params = {},
     ...options
-  } = Object.assign({}, defaultUrlOptions, positionedOptions)
+  } = handlePositionalArgs(segmentKeys, defaults, args, lastArgOptions)
 
   Object.keys(options).forEach(option => {
     if (unsupportedOptions.includes(option)) {
