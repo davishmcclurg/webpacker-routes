@@ -18,9 +18,33 @@ $ bundle exec rails webpacker:install:routes
 Import individual routes from any Webpacker-compiled file:
 
 ```javascript
-import { root_path } from 'routes'
+import { root_path, root_url } from 'routes'
 
-console.log(root_path())
+root_path()
+// /
+
+root_path({ foo: 'bar' })
+// /?foo=bar
+
+root_url({ host: 'https://example.com' })
+// https://example.com/
+
+root_url({ host: 'https://example.com', bar: 'baz' })
+// https://example.com/?bar=baz
+
+root_url({
+  anchor: 'abc',
+  host: 'example.com',
+  params: {
+    foo: 'bar'
+  },
+  port: 3000,
+  protocol: 'https',
+  relative_url_root: '/rel',
+  trailing_slash: true,
+  bar: 'baz'
+})
+// https://example.com:3000/rel/?bar=baz&foo=bar#abc
 ```
 
 The routes file is generated when Rails starts, including during `webpacker:compile` (or `assets:precompile`).
