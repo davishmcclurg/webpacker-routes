@@ -1,9 +1,9 @@
 import babel from 'rollup-plugin-babel';
 
 export default {
-  input: 'package/src.js',
+  input: 'src.js',
   output: {
-    file: 'package/dist.js',
+    file: 'dist.js',
     format: 'esm'
   },
   external: ['route-parser'],
