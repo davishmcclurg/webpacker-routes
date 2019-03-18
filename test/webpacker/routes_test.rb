@@ -42,6 +42,14 @@ class Webpacker::Routes::Test < ActiveSupport::TestCase
     Rails.application.default_url_options = {}
   end
 
+  test 'respects relative_url_root' do
+    Rails.application.config.relative_url_root = '/sub'
+    context = routes_execjs_context
+    assert_equal('/sub/', context.eval('__routes__.root_path()'))
+    assert_equal('http://example.com/sub/', context.eval('__routes__.root_url({ host: "http://example.com" })'))
+    Rails.application.config.relative_url_root = nil
+  end
+
   test 'camel_case' do
     Rails.application.config.webpacker.routes.camel_case = true
     context = routes_execjs_context
