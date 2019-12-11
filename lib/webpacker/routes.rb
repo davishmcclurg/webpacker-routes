@@ -24,28 +24,38 @@ module Webpacker
 
         default_url_options_var = var_name.call('default_url_options')
 
-        File.atomic_write(Webpacker.config.routes_path.join('index.js')) do |file|
-          file.write(<<-JAVASCRIPT.strip_heredoc)
-            import { urlFor, pathFor } from 'webpacker-routes'
-            const #{default_url_options_var} = #{js(default_url_options)}
-          JAVASCRIPT
+        js_file = Webpacker.config.routes_path.join('index.js')
 
-          app.routes.named_routes.sort_by(&:first).each do |name, route|
-            raise `Invalid route name for javascript: ${name}` unless JAVASCRIPT_VARIABLE_NAME_REGEX =~ name
-
-            spec = route.path.spec.to_s
-            segment_keys = route.segment_keys.uniq
-            options = route.defaults.except(*IGNORED_OPTIONS)
-
-            spec_var = var_name.call("#{name}_spec")
-            url_var = var_name.call("#{name}_url")
-            path_var = var_name.call("#{name}_path")
-
-            file.write(<<-JAVASCRIPT.strip_heredoc)
-              const #{spec_var} = [#{js(spec)}, #{js(segment_keys)}, { ...#{default_url_options_var}, ...#{js(options)} }]
-              export const #{url_var} = (...args) => urlFor(#{spec_var}, ...args)
-              export const #{path_var} = (...args) => pathFor(#{spec_var}, ...args)
+        catch(:identical) do
+          File.atomic_write(js_file) do |temp_file|
+            temp_file.write(<<-JAVASCRIPT.strip_heredoc)
+              import { urlFor, pathFor } from 'webpacker-routes'
+              const #{default_url_options_var} = #{js(default_url_options)}
             JAVASCRIPT
+
+            app.routes.named_routes.sort_by(&:first).each do |name, route|
+              raise `Invalid route name for javascript: ${name}` unless JAVASCRIPT_VARIABLE_NAME_REGEX =~ name
+
+              spec = route.path.spec.to_s
+              segment_keys = route.segment_keys.uniq
+              options = route.defaults.except(*IGNORED_OPTIONS)
+
+              spec_var = var_name.call("#{name}_spec")
+              url_var = var_name.call("#{name}_url")
+              path_var = var_name.call("#{name}_path")
+
+              temp_file.write(<<-JAVASCRIPT.strip_heredoc)
+                const #{spec_var} = [#{js(spec)}, #{js(segment_keys)}, { ...#{default_url_options_var}, ...#{js(options)} }]
+                export const #{url_var} = (...args) => urlFor(#{spec_var}, ...args)
+                export const #{path_var} = (...args) => pathFor(#{spec_var}, ...args)
+              JAVASCRIPT
+            end
+
+            temp_file.close
+            if identical?(js_file.to_s, temp_file.path)
+              temp_file.unlink
+              throw :identical
+            end
           end
         end
       end
@@ -54,6 +64,12 @@ module Webpacker
 
       def js(obj)
         ERB::Util.json_escape(obj.to_json)
+      end
+
+      def identical?(path1, path2)
+        FileUtils.compare_file(path1, path2)
+      rescue Errno::ENOENT
+        false
       end
     end
   end
