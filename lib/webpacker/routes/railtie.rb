@@ -7,8 +7,8 @@ module Webpacker
       config.webpacker.routes.default_url_options = {}
       config.webpacker.routes.camel_case = false
 
-      config.after_initialize do |app|
-        generate = -> { Webpacker::Routes.generate(app.tap(&:reload_routes!)) }
+      initializer 'webpacker.routes', :after => :set_routes_reloader_hook do |app|
+        generate = -> { Webpacker::Routes.generate(app) }
         if Rails::VERSION::MAJOR >= 5
           app.reloader.to_run(&generate)
         else
