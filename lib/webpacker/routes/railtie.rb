@@ -8,13 +8,12 @@ module Webpacker
       config.webpacker.routes.camel_case = false
 
       config.after_initialize do |app|
-        generate = -> { Webpacker::Routes.generate(app.tap(&:reload_routes!)) }
         if Rails::VERSION::MAJOR >= 5
-          app.reloader.to_run(&generate)
+          app.reloader.to_run(:after) { Webpacker::Routes.generate(app) }
         else
-          ActionDispatch::Reloader.to_prepare(&generate)
+          ActionDispatch::Reloader.to_prepare(:after) { Webpacker::Routes.generate(app) }
         end
-        generate.call unless ENV['WEBPACKER_ROUTES_INSTALL'] == 'true'
+        Webpacker::Routes.generate(app.tap(&:reload_routes!)) unless ENV['WEBPACKER_ROUTES_INSTALL']
       end
     end
   end
