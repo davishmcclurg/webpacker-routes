@@ -13,6 +13,10 @@ Gem::Specification.new do |s|
   s.summary     = "Convert Rails routes to JavaScript modules"
   s.license     = "MIT"
 
+  s.metadata = {
+      'source_code_uri' => 'https://github.com/davishmcclurg/webpacker-routes',
+  }
+
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "rails", ">= 4.2"
