@@ -117,9 +117,13 @@ const generateUrl = (options) => {
   return out
 }
 
-export const urlFor = ([spec, segmentKeys, defaults], ...args) => {
+const flattenSegmentKeys = ([_spec, segmentKeys, _defaults, parent]) => {
+  return parent ? [...segmentKeys, ...flattenSegmentKeys(parent)] : segmentKeys
+}
+
+export const urlFor = ([spec, segmentKeys, defaults, parent], ...args) => {
   const lastArgOptions = (args[args.length - 1] && typeof args[args.length - 1] === 'object') ? args.pop() : {}
-  const {
+  let {
     user,
     password,
     script_name,
@@ -127,6 +131,18 @@ export const urlFor = ([spec, segmentKeys, defaults], ...args) => {
     params = {},
     ...options
   } = handlePositionalArgs(segmentKeys, defaults, args, lastArgOptions)
+
+  if (parent && !script_name) {
+    const parentOptions = {}
+    const parentSegmentKeys = flattenSegmentKeys(parent)
+    for (let [key, value] of Object.entries(options)) {
+      if (parentSegmentKeys.includes(key)) {
+        parentOptions[key] = value
+        delete options[key]
+      }
+    }
+    script_name = pathFor(parent, parentOptions)
+  }
 
   Object.keys(options).forEach(option => {
     if (unsupportedOptions.includes(option)) {
@@ -156,4 +172,4 @@ export const urlFor = ([spec, segmentKeys, defaults], ...args) => {
   return options.only_path ? generatePath(options) : generateUrl(options)
 }
 
-export const pathFor = ([spec, segmentKeys, defaults], ...args) => urlFor([spec, segmentKeys, { only_path: true, ...defaults }], ...args)
+export const pathFor = ([spec, segmentKeys, defaults, parent], ...args) => urlFor([spec, segmentKeys, { only_path: true, ...defaults }, parent], ...args)

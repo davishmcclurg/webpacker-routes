@@ -19,6 +19,7 @@ Import individual routes from any Webpacker-compiled file:
 
 ```javascript
 import { root_path, root_url } from 'routes'
+import { engine_path } from 'routes/engine_name'
 
 root_path()
 // /
