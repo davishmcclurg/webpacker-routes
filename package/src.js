@@ -16,12 +16,23 @@ const reservedOptions = [
   'trailing_slash'
 ]
 
-const unsupportedOptions = [
+const unsupportedUrlOptions = [
   'domain',
-  'original_script_name',
   'subdomain',
   'tld_length'
 ]
+
+const unsupportedPathOptions = [
+  'original_script_name'
+]
+
+const validateOptions = (options, unsupportedOptions) => {
+  Object.keys(options).forEach(option => {
+    if (unsupportedOptions.includes(option)) {
+      throw new Error(`Unsupported option: ${option}`)
+    }
+  })
+}
 
 const handlePositionalArgs = (segmentKeys, defaults, args, options) => {
   const out = {}
@@ -56,6 +67,7 @@ const generate = (spec, options) => {
 }
 
 const generatePath = (options) => {
+  validateOptions(options, unsupportedPathOptions)
   const { script_name, path, trailing_slash, params, anchor } = options
   let out = ''
   if (script_name) {
@@ -84,6 +96,7 @@ const generatePath = (options) => {
 }
 
 const generateUrl = (options) => {
+  validateOptions(options, unsupportedUrlOptions)
   let { host, port, protocol } = options
   const { user, password } = options
   if (!host) {
@@ -143,12 +156,6 @@ export const urlFor = ([spec, segmentKeys, defaults, parent], ...args) => {
     }
     script_name = pathFor(parent, parentOptions)
   }
-
-  Object.keys(options).forEach(option => {
-    if (unsupportedOptions.includes(option)) {
-      throw new Error(`Unsupported option: ${option}`)
-    }
-  })
 
   const nonReservedOptions = {}
   Object.keys(options).filter(option => !reservedOptions.includes(option)).forEach(option => {
