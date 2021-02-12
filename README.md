@@ -1,7 +1,9 @@
 # Webpacker::Routes
+
 Webpacker Routes allows you to import Rails routes in your Webpacker javascript.
 
 ## Installation
+
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -9,12 +11,14 @@ gem 'webpacker-routes'
 ```
 
 And then execute:
+
 ```bash
 $ bundle
 $ bundle exec rails webpacker:install:routes
 ```
 
 ## Usage
+
 Import individual routes from any Webpacker-compiled file:
 
 ```javascript
@@ -52,6 +56,7 @@ The routes file is generated when Rails starts, including during `webpacker:comp
 In development, routes will be updated when a file changes and a request is processed.
 
 To generate routes manually, run:
+
 ```bash
 $ bundle exec rails webpacker:routes:generate
 ```
@@ -62,4 +67,5 @@ $ bundle exec rails webpacker:routes:generate
 - `config.webpacker.routes.camel_case` - convert route names to camel case. Default: `false`
 
 ## License
+
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
