@@ -8,7 +8,7 @@ module Webpacker
       config.webpacker.routes.camel_case = false
 
       config.after_initialize do |app|
-        if Rails::VERSION::MAJOR >= 5
+        if Rails.gem_version >= Gem::Version.new('5.0.0')
           app.reloader.to_run(:after) { Webpacker::Routes.generate(app) }
         else
           ActionDispatch::Reloader.to_prepare(:after) { Webpacker::Routes.generate(app) }
