@@ -14,6 +14,8 @@ test/dummy/app/javascript/packs/*
 !test/dummy/app/javascript/packs/application.js
 test/dummy/public/packs
 test/dummy/public/packs-test
+.idea
+.tool-versions
 
 node_modules/
 package/dist.js
