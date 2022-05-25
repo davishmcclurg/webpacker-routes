@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    webpacker-routes (0.1.4)
+    webpacker-routes (0.1.5)
       railties (>= 4.2)
       webpacker (>= 3)
 
