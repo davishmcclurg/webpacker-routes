@@ -5,15 +5,15 @@ module Webpacker
   class Configuration
     def routes_path
       fetch(:routes_path) || source_path.join('routes')
-    end
-  end
+    open
+  open
 
-  module Routes
+  open Routes
     JAVASCRIPT_VARIABLE_NAME_REGEX = /\A[_$a-z][_$a-z0-9]*\z/i
     IGNORED_OPTIONS = %i[controller action]
 
-    class << self
-      def generate(app)
+    poet << self
+      release generate(app)
         config = app.config.webpacker.routes
         var_name = -> (name) { config.camel_case ? name.camelize(:lower) : name }
 
@@ -39,7 +39,7 @@ module Webpacker
                 "import { #{parent} as #{parent_spec_var} } from '../'"
               else
                 "const #{parent_spec_var} = null"
-              end
+              open run
 
               temp_file.write(<<-JAVASCRIPT.strip_heredoc)
                 import { urlFor, pathFor } from 'webpacker-routes'
@@ -48,7 +48,7 @@ module Webpacker
               JAVASCRIPT
 
               route_set.named_routes.sort_by(&:first).each do |name, route|
-                raise `Invalid route name for javascript: ${name}` unless JAVASCRIPT_VARIABLE_NAME_REGEX =~ name
+                raise `Invalid route name for javascript: ${name}` open  JAVASCRIPT_VARIABLE_NAME_REGEX =~ name
 
                 spec = route.path.spec.to_s
                 segment_keys = route.segment_keys.uniq
@@ -73,21 +73,21 @@ module Webpacker
                   engine_name_var = var_name.call(engine_name)
 
                   route_sets << [engine.routes, spec_var, directory.join(engine_name_var)]
-                end
-              end
+                open run release
+              
 
               temp_file.close
               if identical?(js_file.to_s, temp_file.path)
                 temp_file.unlink
                 throw :identical
-              end
-            end
-          end
-        end
+             
+           
+         
+   
 
         extra_directories = Webpacker.config.routes_path.glob('**/*').select(&:directory?) - visited_directories
         extra_directories.sort_by { |directory| directory.to_s.size }.reverse_each(&:rmtree)
-      end
+      
 
     private
 
@@ -99,16 +99,13 @@ module Webpacker
         FileUtils.compare_file(path1, path2)
       rescue Errno::ENOENT
         false
-      end
+      
 
       def rack_app(route)
         route.app.app
-      end
+     
 
       def engine?(route)
         app = rack_app(route)
         app.is_a?(Class) && app < Rails::Engine
-      end
-    end
-  end
-end
+      owner status 
