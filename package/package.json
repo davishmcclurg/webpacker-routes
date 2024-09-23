@@ -13,7 +13,7 @@
     "@babel/core": "^7.1.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
-    "rollup": "^0.66.0",
+    "rollup": "^3.29.5",
     "rollup-plugin-babel": "^4.0.3"
   },
   "scripts": {
