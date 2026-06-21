@@ -6,6 +6,6 @@
     "webpacker-routes": "file:../../package"
   },
   "devDependencies": {
-    "webpack-dev-server": "5.2.4"
+    "webpack-dev-server": "5.2.5"
   }
 }
